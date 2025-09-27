@@ -1,0 +1,38 @@
+# version: '3.8'
+
+services:
+  nginx: ./nginx
+  ports:
+    -1337:80
+  depends_on:
+    - web
+  web:
+    build: ./nexus_movies_backend
+    command: gunicorn nexus_movies_backend.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - ./nexus_movies_backend/:/usr/src/nexus_movies_backend/
+    expose:
+      - 8000
+    env_file:
+      - ./.env.dev
+    depends_on:
+      - db
+      - daphne
+    daphne:
+      build: ./nexus_movies_backend
+      command: daphne --bind 0.0.0.0 -p 8002 nexus_movies_backend.asgi:application
+      ports:
+        -8002:8002
+  db:
+    image: postgres:15
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=postgresuser
+      - POSTGRES_PASSWORD=postgrespassword
+      - POSTGRES_DB=nexusmovies
+
+volumes:
+  postgres_data:
+
+

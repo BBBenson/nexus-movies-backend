@@ -8,18 +8,22 @@ services:
     depends_on:
       - web
       - daphne
+    volumes:
+     - media_volume:/usr/src/nexus_movies_backend/media
 
   web:
     build: ./nexus_movies_backend
     command: gunicorn nexus_movies_backend.wsgi:application --bind 0.0.0.0:8000
     volumes:
       - ./nexus_movies_backend/:/usr/src/nexus_movies_backend/
+      - media_volume:/usr/src/nexus_movies_backend/media
     expose:
       - 8000
     env_file:
       - ./.env.dev
     depends_on:
       - db
+      - daphne
 
   daphne:
     build: ./nexus_movies_backend
@@ -42,3 +46,4 @@ services:
 
 volumes:
   postgres_data:
+  media_volume:

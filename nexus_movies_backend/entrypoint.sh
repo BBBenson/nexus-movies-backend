@@ -15,3 +15,5 @@ python manage.py makemigrations
 python manage.py migrate
 
 exec "$@"
+
+chmod +x entrypoint.sh

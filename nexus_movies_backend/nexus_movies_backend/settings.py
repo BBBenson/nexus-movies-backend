@@ -2,26 +2,25 @@ import os
 
 from datetime import timedelta
 from pathlib import Path
+from dotenv import load_dotenv
 
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = True #bool(os.environ.get("DEBUG", default=0))
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY')
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(os.environ.get('DEBUG', default=0))
+DEBUG = True #bool(os.environ.get("DEBUG", default=0))
 
-# ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS').split(" ")
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "").split()
-
-# TMDB API Key
-TMDB_API_KEY = '65eb7efd954cca555c4f29cab5a0f2cf'
+if DEBUG:
+    ALLOWED_HOSTS = ["localhost", "127.0.0.1", "143.110.152.152"]
+else:
+    ALLOWED_HOSTS = ["143.110.152.152"]
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
@@ -30,7 +29,13 @@ SITE_ID = 1
 if DEBUG:
     WEBSITE_URL = 'http://localhost:8000'
 else:
-    WEBSITE_URL = 'http://143.110.152.152'
+    WEBSITE_URL = 'http://143.110.152.152:1337'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer'
+    }
+}
 
 SIMPLE_JWT = {"ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
               "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
@@ -40,6 +45,11 @@ SIMPLE_JWT = {"ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
               "SIGNING_KEY": 'acomplexkey',
               "ALOGORITHM": 'HS512',
               }
+
+
+# TMDB API Key
+TMDB_API_KEY = '65eb7efd954cca555c4f29cab5a0f2cf'
+
 
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 ACCOUNT_EMAIL_REQUIRED = True
@@ -77,7 +87,7 @@ CORS_ORIGINS_WHITELIST = [
     'http://143.110.152.152:1337'
 ]
 # Or allow all origins for development (not recommended for production)
-# CORS_ALLOW_ALL_ORIGINS = True  # Only for development!
+CORS_ALLOW_ALL_ORIGINS = True  # Only for development!
 
 REST_AUTH = {
     "USE_JWT": True,

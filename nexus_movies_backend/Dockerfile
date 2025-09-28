@@ -17,4 +17,5 @@ RUN chmod +x /usr/src/nexus_movies_backend/entrypoint.sh
 
 COPY . .
 
-ENTRYPOINT [ "/usr/src/nexus_movies_backend/entrypoint.sh" ]
+# ENTRYPOINT [ "/usr/src/nexus_movies_backend/entrypoint.sh" ]
+CMD ["gunicorn", "nexus_movies_backend.wsgi:application", "--bind", "0.0.0.0:8000"]

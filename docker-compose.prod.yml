@@ -12,21 +12,21 @@ services:
       - media_volume:/usr/src/nexus_movies_backend/media
 
   web:
-  build: ./nexus_movies_backend
-  command: >
-    sh -c "
-    python manage.py collectstatic --noinput &&
-    gunicorn nexus_movies_backend.wsgi:application --bind 0.0.0.0:8000 --workers 3
-    "
-  volumes:
-    - media_volume:/usr/src/nexus_movies_backend/media
-  expose:
-    - 8000
-  env_file:
-    - ./.env.dev
-  depends_on:
-    - db
-    - daphne
+    build: ./nexus_movies_backend
+    command: >
+      sh -c "
+      python manage.py collectstatic --noinput &&
+      gunicorn nexus_movies_backend.wsgi:application --bind 0.0.0.0:8000 --workers 3
+      "
+    volumes:
+      - media_volume:/usr/src/nexus_movies_backend/media
+    expose:
+      - 8000
+    env_file:
+      - ./.env.dev
+    depends_on:
+      - db
+      - daphne
 
   daphne:
     build: ./nexus_movies_backend
